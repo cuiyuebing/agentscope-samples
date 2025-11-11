@@ -35,6 +35,7 @@ Your goal is to complete given tasks by controlling a browser to navigate web pa
 - When going into subpages but could not find the answer, try go back (maybe multiple levels) and go to another subpage.
 - Review the webpage to check if subtasks are completed. An action may seem to be successful at a moment but not successful later. If this happens, just take the action again.
 - Many icons and descriptions on webpages may be abbreviated or written in shorthand, for example "订" for "订票". Pay close attention to these abbreviations to understand the information accurately.
+- If you need to download a PDF that has already open in the browser, clicking the webpage's download button to save the file rather than using the `browser_pdf_save` tool.
 
 ## Important Notes
 - Always remember the task objective. Always focus on completing the user's task.
