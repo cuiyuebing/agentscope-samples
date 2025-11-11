@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from typing import Optional, Any, Type
 import asyncio
+import json
 import time
 import traceback
-import json
-from pydantic import BaseModel
-from loguru import logger
+from typing import Any, Optional, Type
 
+from loguru import logger
+from pydantic import BaseModel
 
 from agentscope.agent import ReActAgent
 from agentscope.model import ChatModelBase
@@ -244,9 +244,8 @@ class AliasAgentBase(ReActAgent):
                             # Skip non-serializable values
                             pass
 
-                # Skip printing for BrowserAgent and also skip printing the
-                # finish function call (unless it failed)
-                if self.name != DEFAULT_BROWSER_WORKER_NAME and (
+                # Skip the printing of the finish function call
+                if (
                     tool_call["name"] != self.finish_function_name
                     or (
                         tool_call["name"] == self.finish_function_name
