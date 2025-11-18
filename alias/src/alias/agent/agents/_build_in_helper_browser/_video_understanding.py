@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """Standalone video understanding skill for the browser agent."""
-
+# flake8: noqa: E501
+# pylint: disable=W0212
+# pylint: disable=too-many-lines
+# pylint: disable=C0301
 from __future__ import annotations
 
 import json

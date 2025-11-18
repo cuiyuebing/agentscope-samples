@@ -245,7 +245,7 @@ class AliasAgentBase(ReActAgent):
                             pass
 
                 # Skip the printing of the finish function call
-                if (
+                if self.name != DEFAULT_BROWSER_WORKER_NAME and (
                     tool_call["name"] != self.finish_function_name
                     or (
                         tool_call["name"] == self.finish_function_name

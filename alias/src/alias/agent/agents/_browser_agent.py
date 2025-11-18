@@ -36,14 +36,17 @@ from alias.agent.agents import AliasAgentBase
 from alias.agent.agents._planning_tools._planning_notebook import (
     WorkerResponse,
 )
-from alias.agent.agents._build_in_skills_browser._image_understanding import (
+from alias.agent.agents._build_in_helper_browser._image_understanding import (
     image_understanding,
 )
-from alias.agent.agents._build_in_skills_browser._video_understanding import (
+from alias.agent.agents._build_in_helper_browser._video_understanding import (
     video_understanding,
 )
-from alias.agent.agents._build_in_skills_browser._file_download import (
+from alias.agent.agents._build_in_helper_browser._file_download import (
     file_download,
+)
+from alias.agent.agents._build_in_helper_browser._form_filling import (
+    form_filling,
 )
 from alias.agent.utils.constants import (
     DEFAULT_BROWSER_WORKER_NAME,
@@ -98,6 +101,30 @@ with open(
     encoding="utf-8",
 ) as f:
     _BROWSER_AGENT_SUMMARIZE_TASK_PROMPT = f.read()
+
+
+def json_to_markdown(json_data, indent=0):
+    """将JSON转换为Markdown格式"""
+    markdown = ""
+    prefix = "  " * indent
+
+    if isinstance(json_data, dict):
+        for key, value in json_data.items():
+            if isinstance(value, (dict, list)):
+                markdown += f"{prefix}- **{key}**:\n"
+                markdown += json_to_markdown(value, indent + 1)
+            else:
+                markdown += f"{prefix}- **{key}**: {value}\n"
+
+    elif isinstance(json_data, list):
+        for i, item in enumerate(json_data):
+            if isinstance(item, (dict, list)):
+                markdown += f"{prefix}{i + 1}. \n"
+                markdown += json_to_markdown(item, indent + 1)
+            else:
+                markdown += f"{prefix}{i + 1}. {item}\n"
+
+    return markdown
 
 
 async def browser_pre_reply_hook(
@@ -255,6 +282,7 @@ class BrowserAgent(AliasAgentBase):
             self._register_skill_tool(video_understanding)
 
         self._register_skill_tool(file_download)
+        self._register_skill_tool(form_filling)
 
         self.no_screenshot_tool_list = [
             tool
@@ -340,12 +368,6 @@ class BrowserAgent(AliasAgentBase):
             else ""
         )
 
-        # if self.start_url and not self._has_initial_navigated:
-        #     await self._navigate_to_start_url()
-        #     self._has_initial_navigated = True
-        # msg = await self._task_decomposition_and_reformat(msg)
-        # original reply function
-        # await self.memory.add(msg)
         self._required_structured_model = structured_model
         # Record structured output model if provided
         if structured_model:
@@ -488,7 +510,6 @@ class BrowserAgent(AliasAgentBase):
 
             res = await self.model(
                 prompt,
-                # tools=self.toolkit.get_json_schemas(),
                 tools=self.no_screenshot_tool_list,
             )
             # handle output from the model
@@ -499,10 +520,12 @@ class BrowserAgent(AliasAgentBase):
                     msg = Msg(self.name, [], "assistant")
                     async for content_chunk in res:
                         msg.content = content_chunk.content
-                    await self.print(msg)
+                    # await self.print(msg)
+
                 else:
                     msg = Msg(self.name, list(res.content), "assistant")
-                    await self.print(msg)
+                    # await self.print(msg)
+                logger.info(msg.content)
 
             except asyncio.CancelledError as e:
                 interrupted_by_user = True
@@ -666,11 +689,13 @@ class BrowserAgent(AliasAgentBase):
             async for content_chunk in res:
                 decompose_text = content_chunk.content[0]["text"]
                 print_msg.content = content_chunk.content
-                await self.print(print_msg, False)
+                # await self.print(print_msg, False)
         else:
             decompose_text = res.content[0]["text"]
         print_msg.content = [TextBlock(type="text", text=decompose_text)]
-        await self.print(print_msg, True)
+
+        # await self.print(print_msg, True)
+        logger.info(decompose_text)
 
         # Use path relative to this file for robustness
         reflection_prompt_path = os.path.join(
@@ -713,11 +738,12 @@ class BrowserAgent(AliasAgentBase):
             async for content_chunk in reflection_res:
                 reflection_text = content_chunk.content[0]["text"]
                 print_msg.content = content_chunk.content
-                await self.print(print_msg, last=False)
+                # await self.print(print_msg, last=False)
         else:
             reflection_text = reflection_res.content[0]["text"]
         print_msg.content = [TextBlock(type="text", text=reflection_text)]
-        await self.print(print_msg, last=True)
+        # await self.print(print_msg, last=True)
+        logger.info(reflection_text)
 
         subtasks = []
         try:
@@ -1208,6 +1234,7 @@ class BrowserAgent(AliasAgentBase):
         **kwargs: Any,  # pylint: disable=W0613
     ) -> ToolResponse:
         """Generate a response when the agent has completed all subtasks."""
+        # breakpoint()
         hint_msg = Msg(
             "user",
             _BROWSER_AGENT_SUMMARIZE_TASK_PROMPT,
@@ -1244,6 +1271,7 @@ class BrowserAgent(AliasAgentBase):
 
             res_msg.content = summary_text
             await self.print(res_msg, False)
+            # logger.info(summary_text)
             # Validate finish status
             finish_status = await self._validate_finish_status(summary_text)
             logger.info(f"Finish status: {finish_status}")
