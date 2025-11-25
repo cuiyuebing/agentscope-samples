@@ -62,6 +62,66 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "yxdyc",
+      "name": "Daoyuan Chen",
+      "avatar_url": "https://avatars.githubusercontent.com/u/67475544?v=4",
+      "profile": "https://yxdyc.github.io/",
+      "contributions": [
+        "code",
+        "example"
+      ]
+    },
+    {
+      "login": "cmgzn",
+      "name": "MeiXin Chen",
+      "avatar_url": "https://avatars.githubusercontent.com/u/85746275?v=4",
+      "profile": "https://github.com/cmgzn",
+      "contributions": [
+        "code",
+        "example"
+      ]
+    },
+    {
+      "login": "HYLcool",
+      "name": "Yilun Huang",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12782861?v=4",
+      "profile": "https://hylcool.github.io/",
+      "contributions": [
+        "code",
+        "example"
+      ]
+    },
+    {
+      "login": "ShenQianLi",
+      "name": "ShenQianli",
+      "avatar_url": "https://avatars.githubusercontent.com/u/28307002?v=4",
+      "profile": "https://shenqianli.github.io/",
+      "contributions": [
+        "code",
+        "example"
+      ]
+    },
+    {
+      "login": "ZiTao-Li",
+      "name": "ZiTao-Li",
+      "avatar_url": "https://avatars.githubusercontent.com/u/135263265?v=4",
+      "profile": "https://github.com/ZiTao-Li",
+      "contributions": [
+        "code",
+        "example"
+      ]
+    },
+    {
+      "login": "xieyxclack",
+      "name": "Yuexiang XIE",
+      "avatar_url": "https://avatars.githubusercontent.com/u/31954383?v=4",
+      "profile": "https://xieyxclack.github.io/",
+      "contributions": [
+        "code",
+        "example"
+      ]
     }
   ],
   "contributorsPerLine": 7,
